@@ -1,0 +1,37 @@
+- name: Setup Database
+  hosts: postgres_all
+  become: true
+  vars:
+    pg_version: "16"
+    db_name: "app_db"
+    db_user: "app_user"
+
+  tasks:
+    - name: Install Postgres
+      ansible.builtin.apt:
+        name:
+          - postgresql-{{ pg_version }}
+          - postgresql-client-{{ pg_version }}
+          - python3-psycopg2
+        state: present
+        update_cache: yes
+
+    - name: Set remote access
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/{{ pg_version }}/main/postgresql.conf
+        regexp: "^listen_addresses"
+        line: "listen_addresses = '*'"
+      notify: Restart Postgres
+
+    - name: Set wal level
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/{{ pg_version }}/main/postgresql.conf
+        regexp: "^wal_level"
+        line: "wal_level = replica"
+      notify: Restart Postgres
+
+  handlers:
+    - name: Restart Postgres
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted

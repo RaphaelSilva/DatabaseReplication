@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Load environment variables
+if [ -f .env ]; then
+    export $(cat .env | xargs)
+fi
+
 # 1. Levanta a Infra
 echo "Criando Container no Proxmox..."
 terraform init && terraform apply -auto-approve
@@ -11,6 +16,6 @@ sleep 10
 echo "Configurando Banco de Dados..."
 # Cria inventário dinâmico ou estático temporário
 echo "[db_servers]" > inventory.ini
-echo "192.168.1.50 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa" >> inventory.ini
+echo "$PRIMARY_IP ansible_user=$ANSIBLE_USER ansible_ssh_private_key_file=~/.ssh/id_rsa" >> inventory.ini
 
 ansible-playbook -i inventory.ini playbook.yml

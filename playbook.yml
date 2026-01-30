@@ -1,18 +1,11 @@
-- name: Configurar Database
-  hosts: db_servers
-  become: yes
-  tasks:
-    - name: Instalar Postgres
-      apt:
-        name: postgresql
-        state: present
-        update_cache: yes
+- import_playbook: install_postgres.yml
+  vars:
+    target_hosts: postgres_all
 
-    - name: Criar Banco de Dados da Aplicação
-      community.postgresql.postgresql_db:
-        name: meu_banco_prod
-        
-    - name: Criar Usuário do Banco
-      community.postgresql.postgresql_user:
-        name: meu_usuario
-        password: minha_senha_secreta
+- import_playbook: configure_primary.yml
+  vars:
+    target_hosts: primary
+
+- import_playbook: configure_replicas.yml
+  vars:
+    target_hosts: replicas

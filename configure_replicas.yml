@@ -1,0 +1,57 @@
+- name: Setup Replica Database
+  hosts: replicas
+  become: yes
+  vars:
+    pg_version: "16"
+    primary_ip: "{{ lookup('env', 'PRIMARY_IP') }}"
+    replicator_user: "replicator"
+    replicator_password: "{{ lookup('env', 'REPLICATOR_PASSWORD') }}"
+    data_dir: "/var/lib/postgresql/{{ pg_version }}/main"
+
+  tasks:
+    - name: Check if it's already a replica (check standby.signal)
+      ansible.builtin.stat:
+        path: "{{ data_dir }}/standby.signal"
+      register: replica_status
+
+    - name: Stop PostgreSQL to prepare for cloning
+      ansible.builtin.service:
+        name: postgresql
+        state: stopped
+      when: not replica_status.stat.exists
+
+    - name: Clean existing data directory (only if not already a replica)
+      ansible.builtin.file:
+        path: "{{ data_dir }}"
+        state: absent
+      when: not replica_status.stat.exists
+
+    - name: Create empty data directory
+      ansible.builtin.file:
+        path: "{{ data_dir }}"
+        state: directory
+        owner: postgres
+        group: postgres
+        mode: "0700"
+      when: not replica_status.stat.exists
+
+    - name: Execute pg_basebackup (Clone from Primary)
+      ansible.builtin.shell:
+        cmd: >
+          pg_basebackup
+          -h {{ primary_ip }}
+          -U {{ replicator_user }}
+          -D {{ data_dir }}
+          -R
+          -P
+          --wal-method=stream
+      environment:
+        PGPASSWORD: "{{ replicator_password }}"
+      become: yes
+      become_user: postgres
+      when: not replica_status.stat.exists
+
+    - name: Start PostgreSQL
+      ansible.builtin.service:
+        name: postgresql
+        state: started

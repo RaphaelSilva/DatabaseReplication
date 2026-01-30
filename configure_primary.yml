@@ -1,0 +1,32 @@
+- name: Setup Primary Database
+  hosts: primary
+  become: true
+  vars:
+    pg_version: "16"
+
+  tasks:
+    - name: Configure pg_hba.conf to allow replication
+      community.postgresql.postgresql_pg_hba:
+        dest: "/etc/postgresql/{{ pg_version }}/main/pg_hba.conf"
+        contype: host
+        users: replicator
+        databases: replication
+        method: scram-sha-256
+        source: "192.168.1.0/24"
+        state: present
+      notify: Restart Postgres
+
+    - name: Create replication user
+      become: true
+      become_user: postgres
+      community.postgresql.postgresql_user:
+        name: replicator
+        password: "{{ lookup('env', 'REPLICATOR_PASSWORD') }}"
+        role_attr_flags: REPLICATION
+        state: present
+
+  handlers:
+    - name: Restart Postgres
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted
