@@ -2,7 +2,7 @@
   hosts: postgres_all
   become: true
   vars:
-    pg_version: "16"
+    pg_version: "17"
     db_name: "app_db"
     db_user: "app_user"
 

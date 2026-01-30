@@ -2,7 +2,7 @@
   hosts: primary
   become: true
   vars:
-    pg_version: "16"
+    pg_version: "17"
 
   tasks:
     - name: Configure pg_hba.conf to allow replication

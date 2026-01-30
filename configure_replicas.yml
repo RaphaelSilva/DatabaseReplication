@@ -2,10 +2,10 @@
   hosts: replicas
   become: yes
   vars:
-    pg_version: "16"
-    primary_ip: "{{ lookup('env', 'PRIMARY_IP') }}"
+    pg_version: "17"
+    primary_ip: "{{ groups['primary'][0] }}"
     replicator_user: "replicator"
-    replicator_password: "{{ lookup('env', 'REPLICATOR_PASSWORD') }}"
+    replicator_password: "{{ replicator_db_password | default(lookup('env', 'REPLICATOR_PASSWORD')) }}"
     data_dir: "/var/lib/postgresql/{{ pg_version }}/main"
 
   tasks:
@@ -38,15 +38,15 @@
     - name: Execute pg_basebackup (Clone from Primary)
       ansible.builtin.shell:
         cmd: >
+          PGPASSWORD="{{ replicator_password }}"
           pg_basebackup
           -h {{ primary_ip }}
           -U {{ replicator_user }}
           -D {{ data_dir }}
           -R
-          -P
+          --checkpoint=fast
           --wal-method=stream
-      environment:
-        PGPASSWORD: "{{ replicator_password }}"
+          --no-password
       become: yes
       become_user: postgres
       when: not replica_status.stat.exists

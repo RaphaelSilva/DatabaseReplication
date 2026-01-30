@@ -16,8 +16,24 @@ sleep 10
 
 # 3. Configure the Database
 echo "Configuring the Database..."
-# Create dynamic or static temporary inventory
-echo "[db_servers]" > inventory.ini
-echo "$PRIMARY_IP ansible_user=$ANSIBLE_USER ansible_ssh_private_key_file=~/.ssh/id_rsa" >> inventory.ini
+cat <<EOF > inventory.ini
+[primary]
+$PRIMARY_IP
 
-ansible-playbook -i inventory.ini playbook.yml
+[replicas]
+$REPLICA_1_IP
+$REPLICA_2_IP
+
+[postgres_all:children]
+primary
+replicas
+
+[postgres_all:vars]
+ansible_user=$ANSIBLE_USER
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+EOF
+
+ansible all -i inventory.ini -m ping
+
+ansible-playbook -i inventory.ini playbook.yml -e "replicator_db_password=$REPLICATOR_PASSWORD"
