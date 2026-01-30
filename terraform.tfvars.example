@@ -1,0 +1,30 @@
+# Example configuration file
+# Copy this to terraform.tfvars and fill in your actual values
+
+# Proxmox Connection
+pve_host            = "https://192.168.1.100:8006"
+pve_token_id        = "your_user@pam!your_token_id"
+pve_token_secret    = "your_token_secret"
+
+# Container Settings
+container_password  = "your_secure_password"
+container_ip        = "192.168.1.50/24"
+container_gateway   = "192.168.1.1"
+
+# OS Template (must exist in Proxmox)
+os_template         = "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+
+# SSH Key (optional - path to your public key file)
+# Uncomment if you have an SSH key to add to the container
+# ssh_public_key_path = "~/.ssh/id_rsa.pub"
+
+# Optional: Override defaults
+# pve_node           = "pve"
+# container_vmid     = 100
+# container_hostname = "postgres-dev"
+# container_cores    = 2
+# container_memory   = 2048
+# container_swap     = 512
+# network_bridge     = "vmbr0"
+# disk_storage       = "local-lvm"
+# disk_size          = 8
