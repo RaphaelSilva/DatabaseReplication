@@ -8,8 +8,21 @@ pve_token_secret    = "your_token_secret"
 
 # Container Settings
 container_password  = "your_secure_password"
-container_ip        = "192.168.1.50/24"
 container_gateway   = "192.168.1.1"
+
+# Containers Map
+containers = {
+  "109" = {
+    vmid     = 109
+    hostname = "postgres-109"
+    ip       = "192.168.1.109/24"
+  },
+  "110" = {
+    vmid     = 110
+    hostname = "postgres-110"
+    ip       = "192.168.1.110/24"
+  }
+}
 
 # OS Template (must exist in Proxmox)
 os_template         = "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
@@ -20,8 +33,6 @@ os_template         = "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
 
 # Optional: Override defaults
 # pve_node           = "pve"
-# container_vmid     = 100
-# container_hostname = "postgres-dev"
 # container_cores    = 2
 # container_memory   = 2048
 # container_swap     = 512
