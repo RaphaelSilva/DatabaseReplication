@@ -5,6 +5,8 @@ terraform {
       version = "~> 0.50.0"
     }
   }
+
+  backend "pg" {}
 }
 
 moved {

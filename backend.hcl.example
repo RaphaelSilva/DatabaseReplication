@@ -1,0 +1,5 @@
+# Postgres Backend Configuration
+# Fill in your connection string below.
+# Example: conn_str = "postgres://user:password@host:port/dbname?sslmode=disable"
+conn_str = "postgres://user:password@host:5432/terraform_remote_state"
+schema_name = "terraform_remote_state"

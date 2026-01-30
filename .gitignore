@@ -1,6 +1,7 @@
 # Terraform files
 *.tfstate
 *.tfstate.*
+backend.hcl
 *.tfvars
 *.tfvars.json
 *.tfplan
