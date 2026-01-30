@@ -25,18 +25,11 @@ variable "pve_node" {
   default     = "pve"
 }
 
-# Container Configuration
-variable "container_vmid" {
-  description = "ID do container (ex: 100, 101, etc)"
-  type        = number
-  default     = 100
-}
 
-variable "container_hostname" {
-  description = "Hostname do container"
-  type        = string
-  default     = "postgres-dev"
-}
+# Container Configuration
+
+
+# Network Configuration
 
 variable "container_password" {
   description = "Senha do container"
@@ -45,11 +38,6 @@ variable "container_password" {
 }
 
 # Network Configuration
-variable "container_ip" {
-  description = "IP do container com CIDR (ex: 192.168.1.50/24)"
-  type        = string
-}
-
 variable "container_gateway" {
   description = "Gateway do container (ex: 192.168.1.1)"
   type        = string
@@ -65,6 +53,17 @@ variable "network_bridge" {
 variable "os_template" {
   description = "Template do OS (ex: local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst)"
   type        = string
+}
+
+# Containers Map
+variable "containers" {
+  description = "A map of containers to create"
+  type = map(object({
+    vmid     = number
+    hostname = string
+    ip       = string
+  }))
+  default = {}
 }
 
 # Resources

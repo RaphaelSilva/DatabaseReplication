@@ -7,6 +7,11 @@ terraform {
   }
 }
 
+moved {
+  from = proxmox_virtual_environment_container.db_container
+  to   = proxmox_virtual_environment_container.db_container["109"]
+}
+
 provider "proxmox" {
   endpoint = var.pve_host
   api_token = "${var.pve_token_id}=${var.pve_token_secret}"
@@ -14,15 +19,17 @@ provider "proxmox" {
 }
 
 resource "proxmox_virtual_environment_container" "db_container" {
+  for_each = var.containers
+
   node_name = var.pve_node
-  vm_id     = var.container_vmid
+  vm_id     = each.value.vmid
 
   initialization {
-    hostname = var.container_hostname
+    hostname = each.value.hostname
 
     ip_config {
       ipv4 {
-        address = var.container_ip
+        address = each.value.ip
         gateway = var.container_gateway
       }
     }

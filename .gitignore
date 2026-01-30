@@ -3,6 +3,7 @@
 *.tfstate.*
 *.tfvars
 *.tfvars.json
+*.log
 crash.log
 crash.*.log
 .terraform/
@@ -14,7 +15,6 @@ override.tf.json
 
 # Environment files (sensitive data)
 .env
-.env.*
 
 # SSH Keys
 *.pem
