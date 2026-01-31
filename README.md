@@ -99,15 +99,11 @@ All variables are defined in `variables.tf` with sensible defaults where appropr
 - Hardcode secrets in `.tf` files
 - Use default passwords in production
 
-## Files in This Project
-
-- `main.tf` - Main Terraform configuration
-- `variables.tf` - Variable definitions
-- `terraform.tfvars` - **Your secrets (gitignored)**
-- `terraform.tfvars.example` - Template for configuration
-- `.gitignore` - Protects sensitive files
-- `playbook.yml` - Ansible playbook for configuration
-- `run.sh` - Automation script
+- `terraform/`: Terraform configuration files
+- `ansible/`: Ansible playbooks and inventory
+- `scripts/`: Automation and helper scripts
+- `.gitignore`: Protects sensitive files
+- `.env`: Environment variables (gitignored)
 
 ## Migration from telmate/proxmox
 
@@ -149,3 +145,20 @@ DatabaseReplication/
 ├── run.sh                     # Automation script
 ├── test_connection.sh         # API connection test
 └── test_create.sh             # Creation permission test
+
+
+DatabaseReplication/
+├── terraform/                 # Terraform configuration
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── terraform.tfvars
+│   └── ...
+├── ansible/                   # Ansible configuration
+│   ├── playbook.yml
+│   ├── inventory.ini
+│   └── ...
+├── scripts/                   # Automation scripts
+│   ├── run.sh
+│   ├── test_connection.sh
+│   └── ...
+└── .gitignore                 # Updated paths

@@ -1,20 +1,3 @@
-# Terraform files
-*.tfstate
-*.tfstate.*
-backend.hcl
-*.tfvars
-*.tfvars.json
-*.tfplan
-*.log
-crash.log
-crash.*.log
-.terraform/
-.terraform.lock.hcl
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
-
 # Environment files (sensitive data)
 .env
 
@@ -38,5 +21,14 @@ Thumbs.db
 *.bak
 *.backup
 
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/backend.hcl
+terraform/*.tfvars
+terraform/plan.tfplan
+terraform/.terraform.lock.hcl
+
 # Ansible
-inventory.ini
+ansible/inventory.ini
