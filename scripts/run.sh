@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# TODO: Load variables from terraform.tfvars
-
-# Load environment variables
-if [ -f .env ]; then
-    export $(cat .env | xargs)
+# Load environment variables from parent directory
+if [ -f ../.env ]; then
+    export $(cat ../.env | grep -v '^#' | xargs)
 fi
 
 # 1. Create Container in Proxmox
 echo "Creating Container in Proxmox..."
+cd ../terraform
 terraform init && terraform apply -auto-approve
 
-# 2. Wait for the container to boot up (simple sleep or wait-for-it)
+# 2. Wait for the container to boot up
 sleep 10
 
 # 3. Configure the Database
+cd ../ansible
 echo "Configuring the Database..."
 cat <<EOF > inventory.ini
 [primary]
