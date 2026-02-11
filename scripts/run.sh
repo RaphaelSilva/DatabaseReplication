@@ -25,7 +25,8 @@ fi
 # 1. Create Container in Proxmox
 echo "Creating Container in Proxmox..."
 cd ./terraform
-terraform init -backend-config=backend.hcl && terraform apply -auto-approve
+terraform init -backend-config=backend.hcl 
+terraform apply -auto-approve
 cd ../
 sleep 10
 
