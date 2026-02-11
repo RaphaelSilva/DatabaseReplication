@@ -32,3 +32,6 @@ terraform/.terraform.lock.hcl
 
 # Ansible
 ansible/inventory.ini
+
+
+docs/yts

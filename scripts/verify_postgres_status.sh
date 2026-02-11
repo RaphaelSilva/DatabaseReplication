@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #verify if the script is run from the root directory
 if [ "$(basename "$(pwd)")" != "DatabaseReplication" ]; then
     echo "Please run the script from the root directory"
@@ -9,6 +10,8 @@ echo "Starting the script..."
 # Load environment variables from parent directory
 if [ -f .env ]; then
     export $(cat .env | grep -v '^#' | xargs)
+    echo "Environment variables loaded successfully"
+    # REPLICAS_IPS=($REPLICA_1_IP $REPLICA_2_IP)
 fi
 
 # Load IPs from terraform.tfvars
@@ -22,33 +25,20 @@ if [ -f "$TF_VARS" ]; then
     REPLICAS_IPS=$(echo "$ALL_IPS" | tail -n +2)
 fi
 
-# 1. Create Container in Proxmox
-echo "Creating Container in Proxmox..."
-cd ./terraform
-terraform init -backend-config=backend.hcl && terraform apply -auto-approve
-cd ../
-sleep 10
+# A script to check the status of PostgreSQL primary and replica instances.
 
-# 2. Configure the Database
-cd ./ansible
-echo "Configuring the Database..."
-cat <<EOF > inventory.ini
-[primary]
-$PRIMARY_IP
+# PRIMARY_IP="[IP_ADDRESS]"
+# REPLICAS_IPS=("[IP_ADDRESS]" "[IP_ADDRESS]")
 
-[replicas]
-$REPLICAS_IPS
+echo "--- Checking Primary Server: $PRIMARY_IP ---"
+# The [p] in grep is a trick to prevent the grep process itself from showing up in the output.
+ssh root@$PRIMARY_IP "ps aux | grep '[p]ostgres'"
+echo ""
 
-[postgres_all:children]
-primary
-replicas
+for replica_ip in $REPLICAS_IPS; do
+  echo "--- Checking Replica Server: $replica_ip ---"
+  ssh root@$replica_ip "ps aux | grep '[p]ostgres'"
+  echo ""
+done
 
-[postgres_all:vars]
-ansible_user=$ANSIBLE_USER
-ansible_ssh_private_key_file=~/.ssh/id_rsa
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-EOF
-
-ansible all -i inventory.ini -m ping
-
-ansible-playbook -i inventory.ini playbook.yml -e "replicator_db_password=$REPLICATOR_PASSWORD"
+echo "--- Verification Complete ---"
