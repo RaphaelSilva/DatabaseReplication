@@ -4,7 +4,7 @@
 
 # 1. Pull the remote state to a local file
 echo "📥 Pulling remote state from Postgres to local terraform.tfstate..."
-terraform state pull > terraform.tfstate
+terraform init -backend-config=backend.hcl -reconfigure
 
 if [ $? -eq 0 ]; then
     echo "✅ Success! Remote state has been saved to 'terraform.tfstate'."
