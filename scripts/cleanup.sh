@@ -17,6 +17,9 @@ echo "Removing terraform/.terraform directory and state files..."
 rm -rf ./terraform/.terraform
 rm -f ./terraform/terraform.tfstate
 rm -f ./terraform/terraform.tfstate.backup
+rm -f ./terraform/.terraform.lock.hcl
+rm -f ./terraform/errored.tfstate
+rm -f ./terraform/plan.out
 
 # 3. Destroy infrastructure created by Terraform
 read -p "Do you want to destroy the infrastructure created by Terraform (Proxmox containers)? (y/N): " -n 1 -r

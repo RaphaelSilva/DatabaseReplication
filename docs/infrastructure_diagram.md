@@ -18,6 +18,7 @@ The automation pipeline streamlines the transition from bare-metal/virtualized i
 
 
 ```mermaid
+%%{init: {'theme': 'default'}}%%
 flowchart TD
     %% Styles
     classDef hardware fill:#e1f5fe,stroke:#01579b,stroke-width:2px;

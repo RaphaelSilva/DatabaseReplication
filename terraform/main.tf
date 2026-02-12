@@ -6,12 +6,7 @@ terraform {
     }
   }
 
-  backend "pg" {}
-}
-
-moved {
-  from = proxmox_virtual_environment_container.db_container
-  to   = proxmox_virtual_environment_container.db_container["109"]
+  # backend "pg" {}
 }
 
 provider "proxmox" {
