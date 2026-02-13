@@ -150,6 +150,7 @@ case "$1" in
         recover_local_backend
         ;;
     *) 
+        echo "-------------------------------------------------------"
         echo "Usage: $0 <command>
 deploy -------------------------- deploy container and configure database
 container ----------------------- deploy container only
