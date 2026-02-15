@@ -419,7 +419,7 @@ def load_config_from_env() -> Tuple[DatabaseConfig, List[DatabaseConfig]]:
     replica_1_ip = os.getenv('REPLICA_1_IP')
     replica_2_ip = os.getenv('REPLICA_2_IP')
     
-    for i, replica_ip in enumerate([replica_1_ip, replica_2_ip], 1):
+    for _i, replica_ip in enumerate([replica_1_ip, replica_2_ip], 1):
         if replica_ip:
             replica_configs.append(DatabaseConfig(
                 host=replica_ip,
