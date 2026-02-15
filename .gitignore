@@ -35,3 +35,6 @@ ansible/inventory.ini
 
 
 docs/yts
+
+# ignore pycache from src directory
+src/__pycache__
