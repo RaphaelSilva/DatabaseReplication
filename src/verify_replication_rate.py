@@ -116,10 +116,7 @@ class ReplicationRateVerifier:
         # Poll replicas concurrently
         lags = {}
         with ThreadPoolExecutor(max_workers=len(self.replica_conns)) as executor:
-            future_to_host = {
-                executor.submit(self._wait_for_replica, config, conn, test_uuid): config.host 
-                for config, conn in self.replica_conns
-            }
+            future_to_host = {executor.submit(self._wait_for_replica, config, conn, test_uuid): config.host for config, conn in self.replica_conns}
             
             for future in as_completed(future_to_host):
                 host = future_to_host[future]
