@@ -16,17 +16,6 @@
         state: present
       notify: Restart Postgres
 
-    - name: Configure pg_hba.conf to allow postgres user from local subnet
-      community.postgresql.postgresql_pg_hba:
-        dest: "/etc/postgresql/{{ pg_version }}/main/pg_hba.conf"
-        contype: host
-        users: postgres
-        databases: postgres
-        method: scram-sha-256
-        source: "192.168.1.0/24"
-        state: present
-      notify: Restart Postgres
-
     - name: Create replication user
       become: true
       become_user: postgres
