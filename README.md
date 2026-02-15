@@ -99,6 +99,36 @@ All variables are defined in `variables.tf` with sensible defaults where appropr
 - Hardcode secrets in `.tf` files
 - Use default passwords in production
 
+## Testing Database Replication
+
+After deploying your infrastructure, test the replication setup:
+
+### Quick Test (1000 writes, 1000 reads)
+```bash
+./scripts/run.sh test_replication
+```
+
+### Custom Test Parameters
+```bash
+# 5000 writes and 10000 reads
+./scripts/run.sh test_replication --writes 5000 --reads 10000
+
+# Adjust replication wait time
+./scripts/run.sh test_replication --wait 5
+```
+
+### What Gets Tested
+- ✅ Replica status verification (recovery mode)
+- ✅ Concurrent write operations to primary
+- ✅ Concurrent read operations from replicas
+- ✅ Data consistency across all databases
+- ✅ Replication lag measurement
+- ✅ Read performance metrics
+
+See [`src/README.md`](src/README.md) for detailed documentation.
+
+## Project Structure
+
 - `terraform/`: Terraform configuration files
 - `ansible/`: Ansible playbooks and inventory
 - `scripts/`: Automation and helper scripts
@@ -143,6 +173,11 @@ DatabaseReplication/
 ├── README.md                  # Documentation
 ├── playbook.yml               # Ansible playbook
 ├── run.sh                     # Automation script
+├── pyproject.toml             # Python dependencies (uv)
+├── uv.lock                    # Dependency lock file
+├── src/                       # Source code and tests
+│   ├── test_replication.py    # Replication test script
+│   └── ...
 ├── test_connection.sh         # API connection test
 └── test_create.sh             # Creation permission test
 
@@ -159,6 +194,10 @@ DatabaseReplication/
 │   └── ...
 ├── scripts/                   # Automation scripts
 │   ├── run.sh
-│   ├── test_connection.sh
 │   └── ...
+├── src/                       # Testing and validation tools
+│   ├── test_replication.py    # Replication test script
+│   └── README.md              # Testing documentation
+├── pyproject.toml             # Python dependencies (uv)
+├── uv.lock                    # Dependency lock file
 └── .gitignore                 # Updated paths

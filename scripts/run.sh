@@ -149,6 +149,13 @@ case "$1" in
     "recover_local_backend")
         recover_local_backend
         ;;
+    "test_replication")
+        echo "Running replication test..."
+        cd ./src
+        # Run test with uv
+        uv run test_replication.py "${@:2}"
+        cd ../
+        ;;
     *) 
         echo "-------------------------------------------------------"
         echo "Usage: $0 <command>
@@ -161,6 +168,7 @@ check_ansible ------------------- check ansible
 check_container ----------------- check container
 configure_postgres_backend ------ configure postgres backend
 recover_local_backend ----------- recover local backend
+test_replication ---------------- test database replication (options: --writes N --reads N --wait N)
 "
         exit 1
         ;;
